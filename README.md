@@ -2,7 +2,7 @@
 
 ## Nghiên cứu bài 1
 **SV1: Nguyễn Tấn Phát - 52000583**
-#### 1)	Tìm hiểu, so sánh các phương pháp Optimizer trong huấn luyện mô hình học máy:
+## 1)	Tìm hiểu, so sánh các phương pháp Optimizer trong huấn luyện mô hình học máy:
 
 ### Optimizer
 Optimizer (thuật toán tối ưu) là các thuật toán dùng để điều chỉnh các tham số của mô hình (weights, bias) trong quá trình huấn luyện để giảm thiểu hàm mất mát (loss function), cải thiện hiệu suất của mô hình.
@@ -101,3 +101,92 @@ Phần phương sai trong Adam thích ứng tốc độ học riêng biệt cho 
 |     Adagrad         |- Hiệu quả với tập dữ liệu thưa thớt.<br/> - Tỷ lệ học thích ứng cho mỗi tham số.|- Cần lưu trữ lịch sử gradient của tất cả tham số, nên có thể tốn kém về bộ nhớ và tính toán.<br/> - Giảm hiệu quả sau khi hội tụ (có thể tiếp tục giảm tốc độ học, dẫn đến training bị chậm)|
 |     RMSProp         |- Tốc độ học thích ứng trên mỗi tham số giúp hạn chế sự tích lũy độ dốc.<br/> - Hiệu quả đối với các mục tiêu không cố định.|- Có thể có tốc độ hội tụ chậm trong một số trường hợp (ví dụ: tốc độ học quá cao hoặc quá thấp sẽ gây ra vấn đề về tốc độ hội tụ,...)  |
 |       Adam       |- Áp dụng được cho các tập dữ liệu lớn và mô hình nhiều chiều.<br/> - Khái quát hóa tốt.|- Phải điều chỉnh cẩn thận các hyperparameter.  |
+
+***
+## 2)	Tìm hiểu về Continual Learning và Test Production khi xây dựng một giải pháp học máy để giải quyết một bài toán nào đó.
+### Continual Learning
+**Khái niệm:**
+
+Continual Learning (Học liên tục) là một quá trình trong đó một mô hình học từ các luồng dữ liệu mới mà không cần phải qua đào tạo lại. Khác với các phương pháp tiếp cận truyền thống, trong đó mô hình được đào tạo trên tập dữ liệu cố định, các mô hình học liên tục cập nhật lặp đi lặp lại các tham số của chúng để phản ánh các phân phối mới trong dữ liệu.
+
+Quá trình mà mô hình không ngừng tự cải thiện bản thân bằng cách học từ thông tin mới nhất và điều chỉnh kiến thức khi có dữ liệu mới. Trong chu kỳ học máy liên tục, các mô hình có khả năng duy trì sự liên quan theo thời gian do khả năng chịu biến động của chúng.
+
+**Quá trình của Continual Learning:**
+
+1.	Initial training - Mô hình được đào tạo trên tập dữ liệu khởi đầu. Nó tạo ra một bộ tham số ban đầu dựa trên các mẫu mà nó gặp trong dữ liệu.
+2.	Deployment - Mô hình được triển khai để thực hiện nhiệm vụ cụ thể. Trong giai đoạn này, dữ liệu mới liên quan đến nhiệm vụ và môi trường được thu thập.
+3.	Data rehearsal - Mô hình được điều chỉnh thường xuyên, đều đặn bằng cách nhớ lại kinh nghiệm trước đó. Điều này giúp mô hình không quên thông tin đã học trước đó trong quá trình huấn luyện trên dữ liệu mới.
+4.	Continuous learning strategy - Áp dụng một chiến lược học liên tục để thích ứng và cải thiện hiệu suất của mô hình. Chiến lược này giúp mô hình duy trì tính liên quan theo thời gian và thích ứng với sự biến động trong dữ liệu và môi trường.
+5.	Revaluation and monitoring - Hiệu suất của mô hình được đánh giá định kỳ, bao gồm độ chính xác, khả thi, hành vi thực tế và độ chệch. Quá trình này giúp theo dõi sự tiến triển và xác định cần điều chỉnh gì để cải thiện mô hình.
+
+**Tại sao sử dụng Continual Learning?**
+
+Nguyên nhân chính để thực hiện việc điều chỉnh liên tục cho mô hình máy học là để đảm bảo rằng mô hình có thể thích ứng nhanh chóng với sự biến động trong phân phối dữ liệu. 
+
+Các trường hợp sử dụng điển hình bao gồm những tình huống mà sự thay đổi có thể xảy ra đột ngột và mà việc thích ứng linh hoạt là quan trọng. Ví dụ cho trường hợp cần sự thích ứng nhanh chóng với sự kiện thương mại lớn có thể là các chương trình khuyến mãi đặc biệt như ưu đãi giảm giá mùa lễ, sự kiện quảng bá sản phẩm độc đáo hoặc các sự kiện khuyến mãi đặc biệt không theo chu kỳ cố định. Những tình huống này thường xuyên xuất hiện không cố định trong lịch trình và đòi hỏi mô hình phải thích ứng ngay lập tức để đưa ra dự đoán chính xác và phản hồi nhanh chóng cho người dùng.
+
+**Stateful Training và Stateless Retraining**
+  •	Huấn Luyện Có Trạng Thái: mô hình giữ lại kiến thức từ các nhiệm vụ trước và tiếp tục học mà không quên chúng. Điều này đòi hỏi các cơ chế để tránh quên đột ngột.
+  •	Huấn Luyện Lại Không Trạng Thái: mô hình được huấn luyện trên các nhiệm vụ mới mà không giữ lại kiến thức của các nhiệm vụ trước. Phương pháp này có nguy cơ quên thông tin của các nhiệm vụ cũ.
+
+**Ưu và nhược điểm**
+
+•	Ưu Điểm:
+  1.	Khả năng khái quát hóa và dự đoán tốt hơn: mô hình có khả năng khái quát hóa thông tin và dự đoán tốt hơn nhờ việc tích lũy kiến thức theo thời gian. Điều này giúp mô hình đưa ra dự đoán chính xác dựa trên trải nghiệm và thông tin lịch sử.
+  2.	Giữ lại và xây dựng dựa trên kiến thức đã học: Continual learning giúp mô hình giữ lại và xây dựng kiến thức từ các kinh nghiệm trước đó, tạo nền tảng vững chắc cho quá trình học và dự đoán trong tương lai.
+  3.	Thích ứng tốt với dữ liệu và kiến thức mới: có khả năng thích ứng linh hoạt với dữ liệu và kiến thức mới, giúp mô hình duy trì độ chính xác và hiệu suất khi có sự thay đổi trong môi trường hoặc dữ liệu.
+
+•	Nhược điểm:
+  1.	Khó quản lý các phiên bản mô hình khác nhau: quản lý nhiều phiên bản mô hình có thể là một thách thức, đặc biệt khi mô hình phải điều chỉnh liên tục để thích ứng với dữ liệu mới và kiến thức.
+  2.	Cần xử lý liên tục dữ liệu mới, dễ bị ảnh hưởng bởi dữ liệu trôi dạt: việc xử lý liên tục dữ liệu mới có thể đòi hỏi nhiều công sức và tài nguyên, đồng thời mô hình có thể bị ảnh hưởng bởi sự biến động và nhiễu từ dữ liệu mới.
+- - -
+### Test Production
+
+**Khái niệm:**
+
+Test Production là giai đoạn quyết định, mô hình học máy sau khi được huấn luyện, trải qua quá trình đánh giá chặt chẽ trong một bối cảnh thực tế. Mục tiêu chính là xác định hiệu suất của mô hình và khả năng đáp ứng yêu cầu kinh doanh khi triển khai trong môi trường sản xuất.
+
+**Các bước chính trong Test Production:**
+  1.	Chuẩn bị bộ dữ liệu kiểm thử - Bộ dữ liệu này cần chia sẻ các đặc tính phân phối tương tự với dữ liệu huấn luyện và hoàn toàn độc lập để huấn luyện mô hình.
+  2.	Triển khai mô hình - Triển khai mô hình đã huấn luyện vào môi trường thực tế giống hệt với môi trường production.
+  3.	Kiểm thử - Cho mô hình dự đoán trên tập dữ liệu kiểm tra và thu thập các metric (accuracy, recall, precision, F1 score,...).
+  4.	Phân tích và đánh giá - Các chỉ số thu thập được được phân tích so với ngưỡng mong đợi và yêu cầu thực tế để đánh giá hiệu quả của mô hình.
+  5.	Tinh chỉnh và cải tiến - Dựa trên phân tích, các điều chỉnh cần thiết được thực hiện đối với quy trình xây dựng và huấn luyện mô hình.
+
+**Testing trong Production Strategies:**
+  1.	Shadow Deployment
+  - Mô tả: Một phiên bản đối phó hoặc "shadow" của mô hình được triển khai cùng với mô hình hiện tại trên sản xuất. Nó xử lý dữ liệu sản xuất thực tế, nhưng các dự đoán của nó không được sử dụng để đưa ra quyết định.
+  - Ưu điểm: đây là cách an toàn nhất để triển khai mô hình của bạn. Ngay cả khi mô hình mới của bạn có lỗi, dự đoán sẽ không được đưa ra.
+  - Hạn chế: 
+    +	Không thể sử dụng kỹ thuật này khi đo lường hiệu suất của mô hình phụ thuộc vào việc quan sát cách người dùng tương tác với các dự đoán.
+    +	Kỹ thuật này tốn kém khi chạy vì nó tăng gấp đôi số lượng dự đoán và do đó số lượng tính toán cần thiết.
+
+  2.	A/B Testing
+  - Mô tả: Hai phiên bản (A và B) của mô hình được triển khai, và lưu lượng truy cập thực tế được chia thành hai phần.
+  - Ưu điểm: 
+    +	Dễ hiểu và cho phép so sánh trực tiếp hiệu suất mô hình dưới điều kiện thực tế. Giúp đưa ra quyết định dựa trên dữ liệu.
+    +	Dự đoán được cung cấp cho người dùng nên kỹ thuật này cho phép bạn nắm bắt đầy đủ cách người dùng phản ứng với các mô hình khác nhau.
+  - Hạn chế: 
+    +	Kém an toàn hơn so với Shadow Deployment
+    +	Bạn phải đối mặt với giả định nhiều rủi ro.
+    +	Trong trường hợp cần phản ứng nhanh với biến động trong dữ liệu, việc chờ đợi đủ dữ liệu có thể là một hạn chế. Bạn có thể không thể đưa ra quyết định ngay lập tức nếu cần sự linh hoạt và ứng phó nhanh chóng.
+  3. Canary Release
+  - Mô tả: Mô hình mới được triển khai từ từ cho một tập con nhỏ người dùng hoặc lưu lượng. Hiệu suất được giám sát chặt chẽ, và nếu thành công, quá trình triển khai mở rộng ra một đối tượng lớn hơn.
+  - Ưu điểm: 
+    +	Cho phép tiếp cận dần dần để xác định vấn đề sớm. Giảm thiểu ảnh hưởng của vấn đề có thể xảy ra trên quy mô lớn.
+    +	Nếu kết hợp với A/B Testing, nó cho phép bạn thay đổi linh hoạt lượng lưu lượng truy cập mà mỗi mô hình đang sử dụng.
+  -	Hạn chế: Nếu việc triển khai không được giám sát cẩn thận, có thể xảy ra những sự cố không mong muốn. Đây có thể coi là lựa chọn an toàn nhất, tuy nhiên, nó cũng dễ dàng quay trở lại trạng thái trước đó nếu cần thiết.
+  4.	Interleaving Experiments
+  -	Mô tả: Trong thử nghiệm A/B (A/B Testing), một người dùng sẽ nhận được dự đoán từ mô hình A hoặc mô hình B. Khi xen kẽ, một người dùng sẽ nhận được dự đoán xen kẽ từ cả mô hình A và mô hình B. Sau đó, chúng tôi theo dõi hiệu quả hoạt động của từng mô hình bằng cách đo lường mức độ ưu tiên của người dùng với từng mô hình dự đoán của mô hình (ví dụ: người dùng nhấp nhiều hơn vào đề xuất từ mô hình B)
+  -	Ưu điểm: Cung cấp so sánh trực tiếp giữa kết quả mô hình trong các kịch bản thực tế. Giảm thiểu độ chệch từ các yếu tố thời gian hoặc người dùng cụ thể.
+  -	Hạn chế: 
+    +	Việc triển khai phức tạp hơn thử nghiệm A/B - nếu một trong các mô hình xen kẽ mất quá nhiều thời gian để phản hồi hoặc không thành công
+    +	Nó tăng gấp đôi sức mạnh tính toán cần thiết vì mọi yêu cầu đều nhận được dự đoán từ nhiều mô hình.
+  5.	Bandits
+  - Mô tả: Bandits là một thuật toán theo dõi hiệu suất hiện tại của từng biến thể mô hình và đưa ra quyết định linh hoạt đối với mọi yêu cầu về việc nên sử dụng mô hình có hiệu suất cao nhất cho đến nay (tức là khai thác kiến thức hiện tại) hay thử bất kỳ mô hình nào khác để có thêm thông tin về chúng (tức là khám phá xem một trong các mô hình khác thực sự tốt hơn).
+  - Ưu điểm:
+    +	Bandits ít mất dữ liệu hơn A/B Testing để xác định mô hình nào tốt hơn. Ngoài ra, tốc độ hội tụ sẽ nhanh hơn và an toàn hơn.
+    +	Sử dụng dữ liệu hiệu quả hơn đồng thời giảm thiểu chi phí cơ hội của bạn (opportunity cost)
+  -	Hạn chế:
+    +	Khó thực hiện hơn do phải truyền phải hồi vào thuật toán một cách liên tục.
+    +	Không an toàn như Shadow Deployment vì phải đối mặt với thách thức chiếm lưu lượng truy cập trực tiếp.
