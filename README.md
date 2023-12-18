@@ -119,6 +119,12 @@ Quá trình mà mô hình không ngừng tự cải thiện bản thân bằng c
 4.	Continuous learning strategy - Áp dụng một chiến lược học liên tục để thích ứng và cải thiện hiệu suất của mô hình. Chiến lược này giúp mô hình duy trì tính liên quan theo thời gian và thích ứng với sự biến động trong dữ liệu và môi trường.
 5.	Revaluation and monitoring - Hiệu suất của mô hình được đánh giá định kỳ, bao gồm độ chính xác, khả thi, hành vi thực tế và độ chệch. Quá trình này giúp theo dõi sự tiến triển và xác định cần điều chỉnh gì để cải thiện mô hình.
 
+**Thách thức**
+
+Continual Learning đối mặt với một loạt các thách thức, bao gồm việc đối diện với hiện tượng *Catastrophic Forgetting*. Trong quá trình đào tạo với dữ liệu mới, mô hình có thể không chỉ quên thông tin của các nhiệm vụ trước đó mà còn làm giảm độ chính xác đối với chúng. 
+Ngoài ra, một thách thức khác là *Preserving Knowledge*, yêu cầu mô hình phải có khả năng bảo toàn kiến thức đã học trước đó khi tiếp tục học từ dữ liệu mới. 
+Cuối cùng, việc *tích hợp dữ liệu mới (Incorporating new data)* cũng là một vấn đề quan trọng. Mô hình cần có khả năng tích hợp dữ liệu mới một cách linh hoạt mà không gây ảnh hưởng đáng kể đến khả năng dự đoán trên các nhiệm vụ đã được thực hiện trước đó.
+
 **Tại sao sử dụng Continual Learning?**
 
 Nguyên nhân chính để thực hiện việc điều chỉnh liên tục cho mô hình máy học là để đảm bảo rằng mô hình có thể thích ứng nhanh chóng với sự biến động trong phân phối dữ liệu. 
@@ -126,8 +132,21 @@ Nguyên nhân chính để thực hiện việc điều chỉnh liên tục cho 
 Các trường hợp sử dụng điển hình bao gồm những tình huống mà sự thay đổi có thể xảy ra đột ngột và mà việc thích ứng linh hoạt là quan trọng. Ví dụ cho trường hợp cần sự thích ứng nhanh chóng với sự kiện thương mại lớn có thể là các chương trình khuyến mãi đặc biệt như ưu đãi giảm giá mùa lễ, sự kiện quảng bá sản phẩm độc đáo hoặc các sự kiện khuyến mãi đặc biệt không theo chu kỳ cố định. Những tình huống này thường xuyên xuất hiện không cố định trong lịch trình và đòi hỏi mô hình phải thích ứng ngay lập tức để đưa ra dự đoán chính xác và phản hồi nhanh chóng cho người dùng.
 
 **Stateful Training và Stateless Retraining**
-  •	Huấn Luyện Có Trạng Thái: mô hình giữ lại kiến thức từ các nhiệm vụ trước và tiếp tục học mà không quên chúng. Điều này đòi hỏi các cơ chế để tránh quên đột ngột.
-  •	Huấn Luyện Lại Không Trạng Thái: mô hình được huấn luyện trên các nhiệm vụ mới mà không giữ lại kiến thức của các nhiệm vụ trước. Phương pháp này có nguy cơ quên thông tin của các nhiệm vụ cũ.
+
+<img src="https://i.imgur.com/w4PRIoQ.png">
+
+  •	Huấn luyện có trạng thái (Stateful Training): mô hình giữ lại kiến thức từ các nhiệm vụ trước và tiếp tục học mà không quên chúng. Điều này đòi hỏi các cơ chế để tránh quên đột ngột.
+  •	Huấn luyện lại không trạng thái (Stateless Retraining): mô hình được huấn luyện trên các nhiệm vụ mới mà không giữ lại kiến thức của các nhiệm vụ trước. Phương pháp này có nguy cơ quên thông tin của các nhiệm vụ cũ.
+
+Chênh lệch giữa hai khái niệm này có thể được nhận biết bằng cách mô tả quá trình đào tạo Stateful và Stateless. Trong Stateful Training, mô hình duy trì trạng thái của nó qua các nhiệm vụ khác nhau, trong đó trạng thái có thể chứa các tham số, trọng số mạng nơ-ron hoặc các giá trị khác liên quan đến trạng thái hiện tại của mô hình. Khi chuyển đổi giữa các nhiệm vụ, mô hình sử dụng trạng thái hiện tại để hỗ trợ quá trình học và giữ lại kiến thức đã học từ trước.
+
+Ngược lại, *Stateless Retraining* không bảo toàn trạng thái giữa các nhiệm vụ. Thay vào đó, khi chuyển từ một nhiệm vụ sang nhiệm vụ mới, mô hình bắt đầu lại quá trình đào tạo từ trạng thái ban đầu hoặc một trạng thái ngẫu nhiên. Phương pháp này có thể dẫn đến hiện tượng quên (catastrophic forgetting), khi mô hình mất kiến thức đã học khi đối mặt với dữ liệu mới.
+
+Sự chọn lựa giữa *Stateful Training* và *Stateless Retraining* phụ thuộc vào yêu cầu cụ thể của ứng dụng và ngữ cảnh đào tạo. Có nhiều kỹ thuật được áp dụng để giải quyết thách thức của cả hai phương pháp, bao gồm memory replay (lưu trữ và tái sử dụng dữ liệu từ quá khứ) và các kỹ thuật regularization để giảm thiểu nguy cơ quên kiến thức đã học.
+
+**Đo lường sự thay đổi của dữ liệu**
+
+Để đánh giá giá trị của dữ liệu mới, một phương pháp là huấn luyện một mô hình có cùng cấu trúc trên dữ liệu từ ba khoảng thời gian khác nhau và sau đó kiểm thử mỗi mô hình trên dữ liệu hiện tại được gán nhãn. Nếu quan sát được rằng việc để mô hình lỗi thời trong vòng 3 tháng dẫn đến sự chênh lệch 10% trong độ chính xác của dữ liệu kiểm thử hiện tại, thì việc huấn luyện lại nên được thực hiện trong khoảng thời gian ít hơn 3 tháng.
 
 **Ưu và nhược điểm**
 
@@ -153,6 +172,14 @@ Test Production là giai đoạn quyết định, mô hình học máy sau khi �
   4.	Phân tích và đánh giá - Các chỉ số thu thập được được phân tích so với ngưỡng mong đợi và yêu cầu thực tế để đánh giá hiệu quả của mô hình.
   5.	Tinh chỉnh và cải tiến - Dựa trên phân tích, các điều chỉnh cần thiết được thực hiện đối với quy trình xây dựng và huấn luyện mô hình.
 
+**Đánh giá trước khi triển khai**
+
+Có hai phương pháp phổ biến được sử dụng là Test Splits và Backtesting để đánh giá hiệu suất mô hình:
+
+***Test Splits:*** Sử dụng các tập kiểm thử tĩnh để so sánh với một điểm cơ sở và thực hiện các kiểm thử lại. Tập kiểm thử thường là tĩnh để cung cấp một điểm chuẩn đáng tin cậy để so sánh giữa các mô hình. *Tuy nhiên*, hiệu suất tốt trên một tập kiểm thử cụ thể không đảm bảo hiệu suất tốt trong môi trường sản xuất do sự thay đổi trong phân phối dữ liệu hiện tại.
+
+***Backtesting:*** Sử dụng dữ liệu mới nhất, chưa được mô hình thấy trong quá trình huấn luyện, để kiểm thử hiệu suất. *Tuy nhiên*, cần chú ý đến các yếu tố như độ trễ, hành vi người dùng đối với mô hình và tính đúng đắn của tích hợp hệ thống để đảm bảo an toàn khi triển khai rộng rãi. Mặc dù backtesting cung cấp cái nhìn về hiệu suất trên dữ liệu mới, nhưng quan sát kỹ thuật này là quan trọng để đảm bảo mô hình hoạt động hiệu quả trong điều kiện thực tế.
+
 **Testing trong Production Strategies:**
   1.	Shadow Deployment
   - Mô tả: Một phiên bản đối phó hoặc "shadow" của mô hình được triển khai cùng với mô hình hiện tại trên sản xuất. Nó xử lý dữ liệu sản xuất thực tế, nhưng các dự đoán của nó không được sử dụng để đưa ra quyết định.
@@ -162,7 +189,9 @@ Test Production là giai đoạn quyết định, mô hình học máy sau khi �
     +	Kỹ thuật này tốn kém khi chạy vì nó tăng gấp đôi số lượng dự đoán và do đó số lượng tính toán cần thiết.
 
   2.	A/B Testing
-  - Mô tả: Hai phiên bản (A và B) của mô hình được triển khai, và lưu lượng truy cập thực tế được chia thành hai phần.
+  - Mô tả: Triển khai mô hình đối thủ (mô hình B) đồng thời với mô hình hiện tại (mô hình A) và định tuyến một phần trăm lưu lượng đến mô hình đối thủ là một chiến lược để đánh giá hiệu suất giữa hai mô hình. Dự đoán từ mô hình đối thủ được hiển thị cho người dùng, và sau đó, sử dụng theo dõi và phân tích kết quả dự đoán từ cả hai mô hình để xác định xem hiệu suất của mô hình đối thủ có sự cải thiện thống kê so với mô hình hiện tại không.
+    Trong một số trường hợp sử dụng không tương thích với việc chia lưu lượng và triển khai nhiều mô hình cùng một lúc, chiến lược thử nghiệm A/B có thể được thực hiện theo thời gian. Điều này bao gồm việc chia lưu lượng theo chu kỳ thời gian, chẳng hạn như một ngày cho mô hình A và ngày tiếp theo cho mô hình B. Quan trọng là phân chia lưu lượng phải là một thử nghiệm ngẫu nhiên thực sự, đảm bảo rằng việc chọn mô hình A hoặc B không bị thiên lệch.
+    Nếu có bất kỳ thiên lệch lựa chọn nào trong quá trình phân chia lưu lượng (ví dụ: người dùng máy tính nhận mô hình A và người dùng di động nhận mô hình B), kết quả của thử nghiệm sẽ không chính xác. Để đảm bảo tính chính xác của kết quả, thử nghiệm phải chạy đủ lâu để thu thập đủ mẫu và đạt được độ tin cậy thống kê đáng tin cậy.
   - Ưu điểm: 
     +	Dễ hiểu và cho phép so sánh trực tiếp hiệu suất mô hình dưới điều kiện thực tế. Giúp đưa ra quyết định dựa trên dữ liệu.
     +	Dự đoán được cung cấp cho người dùng nên kỹ thuật này cho phép bạn nắm bắt đầy đủ cách người dùng phản ứng với các mô hình khác nhau.
