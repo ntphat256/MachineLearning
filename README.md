@@ -119,7 +119,7 @@ Quá trình mà mô hình không ngừng tự cải thiện bản thân bằng c
 4.	Continuous learning strategy - Áp dụng một chiến lược học liên tục để thích ứng và cải thiện hiệu suất của mô hình. Chiến lược này giúp mô hình duy trì tính liên quan theo thời gian và thích ứng với sự biến động trong dữ liệu và môi trường.
 5.	Revaluation and monitoring - Hiệu suất của mô hình được đánh giá định kỳ, bao gồm độ chính xác, khả thi, hành vi thực tế và độ chệch. Quá trình này giúp theo dõi sự tiến triển và xác định cần điều chỉnh gì để cải thiện mô hình.
 
-**Thách thức**
+**Thách thức:**
 
 Continual Learning đối mặt với một loạt các thách thức, bao gồm việc đối diện với hiện tượng *Catastrophic Forgetting*. Trong quá trình đào tạo với dữ liệu mới, mô hình có thể không chỉ quên thông tin của các nhiệm vụ trước đó mà còn làm giảm độ chính xác đối với chúng. 
 Ngoài ra, một thách thức khác là *Preserving Knowledge*, yêu cầu mô hình phải có khả năng bảo toàn kiến thức đã học trước đó khi tiếp tục học từ dữ liệu mới. 
@@ -136,6 +136,7 @@ Các trường hợp sử dụng điển hình bao gồm những tình huống m
 <img src="https://i.imgur.com/w4PRIoQ.png">
 
   •	Huấn luyện có trạng thái (Stateful Training): mô hình giữ lại kiến thức từ các nhiệm vụ trước và tiếp tục học mà không quên chúng. Điều này đòi hỏi các cơ chế để tránh quên đột ngột.
+  
   •	Huấn luyện lại không trạng thái (Stateless Retraining): mô hình được huấn luyện trên các nhiệm vụ mới mà không giữ lại kiến thức của các nhiệm vụ trước. Phương pháp này có nguy cơ quên thông tin của các nhiệm vụ cũ.
 
 Chênh lệch giữa hai khái niệm này có thể được nhận biết bằng cách mô tả quá trình đào tạo Stateful và Stateless. Trong Stateful Training, mô hình duy trì trạng thái của nó qua các nhiệm vụ khác nhau, trong đó trạng thái có thể chứa các tham số, trọng số mạng nơ-ron hoặc các giá trị khác liên quan đến trạng thái hiện tại của mô hình. Khi chuyển đổi giữa các nhiệm vụ, mô hình sử dụng trạng thái hiện tại để hỗ trợ quá trình học và giữ lại kiến thức đã học từ trước.
